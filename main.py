@@ -5,30 +5,28 @@ import time
 
 # Variables
 COUNTER = 0
-TOTAL_BLINKS = 0
-CLOSED_EYES_FRAME = 3
+TOTAL_BLINKS = 0 # Tổng lượt nháy mắt
+CLOSED_EYES_FRAME = 3  
 cameraID = 0
-videoPath = "Video/Your Eyes Independently_Trim5.mp4"
 # variables for frame rate.
 FRAME_COUNTER = 0
 START_TIME = time.time()
 FPS = 0
 
+vt = 20
+
 
 # creating camera object
 camera = cv.VideoCapture(0)
-# camera.set(3, 640)
-# camera.set(4, 480)
+
 
 # Define the codec and create VideoWriter object
-fourcc = cv.VideoWriter_fourcc(*'XVID')
-f = camera.get(cv.CAP_PROP_FPS)
-width = camera.get(cv.CAP_PROP_FRAME_WIDTH)
-height = camera.get(cv.CAP_PROP_FRAME_HEIGHT)
-print(width, height, f)
-fileName = videoPath.split('/')[1]
-name = fileName.split('.')[0]
-print(name)
+# fourcc = cv.VideoWriter_fourcc(*'XVID')
+# f = camera.get(cv.CAP_PROP_FPS)
+# width = camera.get(cv.CAP_PROP_FRAME_WIDTH)
+# height = camera.get(cv.CAP_PROP_FRAME_HEIGHT)
+# print(width, height, f)
+
 
 
 # Recoder = cv.VideoWriter(f'{name}.mp4', fourcc, 15, (int(width), int(height)))
@@ -40,7 +38,7 @@ while True:
     if ret == False:
         break
 
-    # converting frame into Gry image.
+    # converting frame into Gray image.
     grayFrame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     height, width = grayFrame.shape
     circleCenter = (int(width/2), 50)
@@ -61,6 +59,7 @@ while True:
         # cv.circle(image, topMid, 2, m.YELLOW, -1)
         # cv.circle(image, bottomMid, 2, m.YELLOW, -1)
 
+        # Vẽ Hồng tâm ở giữa
         blinkRatio = (leftRatio + rightRatio)/2
         cv.circle(image, circleCenter, (int(blinkRatio*4.3)), m.CHOCOLATE, -1)
         cv.circle(image, circleCenter, (int(blinkRatio*3.2)), m.CYAN, 2)
@@ -81,8 +80,7 @@ while True:
         # for p in LeftEyePoint:
         #     cv.circle(image, p, 3, m.MAGENTA, 1)
         mask, pos, color = m.EyeTracking(frame, grayFrame, RightEyePoint)
-        maskleft, leftPos, leftColor = m.EyeTracking(
-            frame, grayFrame, LeftEyePoint)
+        maskleft, leftPos, leftColor = m.EyeTracking(frame, grayFrame, LeftEyePoint)
 
         # draw background as line where we put text.
         cv.line(image, (30, 90), (100, 90), color[0], 30)

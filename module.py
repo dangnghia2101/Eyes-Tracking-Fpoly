@@ -43,7 +43,7 @@ def midpoint(pts1, pts2):
     # print(xOut, x, x1)
     return (xOut, yOut)
 
-
+# Tính chiều dài 2 tọa độ
 def eucaldainDistance(pts1, pts2):
     x, y = pts1
     x1, y1 = pts2
@@ -53,7 +53,7 @@ def eucaldainDistance(pts1, pts2):
 
 # creating face detector function
 
-
+# Xác định khuông mặt, vẽ hình vuông
 def faceDetector(image, gray, Draw=True):
     cordFace1 = (0, 0)
     cordFace2 = (0, 0)
@@ -61,7 +61,7 @@ def faceDetector(image, gray, Draw=True):
     faces = detectFace(gray)
 
     face = None
-    # looping through All the face detected.
+    #looping through All the face detected.
     for face in faces:
         # getting coordinates of face.
         cordFace1 = (face.left(), face.top())
@@ -101,22 +101,21 @@ def blinkDetector(eyePoints):
     # getting the actual width and height eyes using eucaldainDistance function
     VerticalDistance = eucaldainDistance(topMid, bottomMid)
     HorizontalDistance = eucaldainDistance(eyePoints[0], eyePoints[3])
-    # print()
+    
 
     blinkRatio = (HorizontalDistance/VerticalDistance)
     return blinkRatio, topMid, bottomMid
 
 # Eyes Tracking function.
-
-
+# Code xủ lí mắt chính
 def EyeTracking(image, gray, eyePoints):
     # getting dimensions of image
-    dim = gray.shape
+    dim = gray.shape  # Lấy kích thước màn hình camera 
     # creating mask .
-    mask = np.zeros(dim, dtype=np.uint8)
+    mask = np.zeros(dim, dtype=np.uint8)  # Tạo mảng 2 chiều có kích thước dim với tất cả giá trị 0
 
     # converting eyePoints into Numpy arrays.
-    PollyPoints = np.array(eyePoints, dtype=np.int32)
+    PollyPoints = np.array(eyePoints, dtype=np.int32)  
     # Filling the Eyes portion with WHITE color.
     cv.fillPoly(mask, [PollyPoints], 255)
 
@@ -124,7 +123,6 @@ def EyeTracking(image, gray, eyePoints):
     eyeImage = cv.bitwise_and(gray, gray, mask=mask)
 
     # getting the max and min points of eye inorder to crop the eyes from Eye image .
-
     maxX = (max(eyePoints, key=lambda item: item[0]))[0]
     minX = (min(eyePoints, key=lambda item: item[0]))[0]
     maxY = (max(eyePoints, key=lambda item: item[1]))[1]
@@ -141,26 +139,26 @@ def EyeTracking(image, gray, eyePoints):
 
     divPart = int(width/3)
 
-    #  applying the threshold to the eye .
+    #  applying the threshold to the eye . Đọc Document để hiểu rõ https://docs.opencv.org/4.5.1/d7/d4d/tutorial_py_thresholding.html
+    # Tham khảo https://docs.opencv.org/4.5.2/d7/dd0/tutorial_js_thresholding.html
     ret, thresholdEye = cv.threshold(cropedEye, 100, 255, cv.THRESH_BINARY)
-
+    
     # dividing the eye into Three parts .
     rightPart = thresholdEye[0:height, 0:divPart]
     centerPart = thresholdEye[0:height, divPart:divPart+divPart]
     leftPart = thresholdEye[0:height, divPart+divPart:width]
 
+    print(rightPart, " ", centerPart)
     # counting Black pixel in each part using numpy.
     rightBlackPx = np.sum(rightPart == 0)
     centerBlackPx = np.sum(centerPart == 0)
     leftBlackPx = np.sum(leftPart == 0)
     pos, color = Position([rightBlackPx, centerBlackPx, leftBlackPx])
     # print(pos)
-
     return mask, pos, color
 
 
 def Position(ValuesList):
-
     maxIndex = ValuesList.index(max(ValuesList))
     posEye = ''
     color = [WHITE, BLACK]
