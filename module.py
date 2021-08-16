@@ -115,12 +115,12 @@ def EyeTracking(image, gray, eyePoints):
     mask = np.zeros(dim, dtype=np.uint8)  # Tạo mảng 2 chiều có kích thước dim với tất cả giá trị 0
 
     # converting eyePoints into Numpy arrays.
-    PollyPoints = np.array(eyePoints, dtype=np.int32)  
+    PollyPoints = np.array(eyePoints, dtype=np.int32)  #Ép sang kiểu array numpy để áp dụng đc fillPoly
     # Filling the Eyes portion with WHITE color.
-    cv.fillPoly(mask, [PollyPoints], 255)
+    cv.fillPoly(mask, [PollyPoints], 255) # vùng trong khung mắt vẽ màu trắng 255
 
     # Writing gray image where color is White  in the mask using Bitwise and operator.
-    eyeImage = cv.bitwise_and(gray, gray, mask=mask)
+    eyeImage = cv.bitwise_and(gray, gray, mask=mask) #lấy các pixel nơi có mask !=0
 
     # getting the max and min points of eye inorder to crop the eyes from Eye image .
     maxX = (max(eyePoints, key=lambda item: item[0]))[0]
@@ -128,7 +128,7 @@ def EyeTracking(image, gray, eyePoints):
     maxY = (max(eyePoints, key=lambda item: item[1]))[1]
     minY = (min(eyePoints, key=lambda item: item[1]))[1]
 
-    # other then eye area will black, making it white
+    # other then eye area will black, making it white. Đổi background khung mắt
     eyeImage[mask == 0] = 255
 
     # cropping the eye form eyeImage.
@@ -142,20 +142,20 @@ def EyeTracking(image, gray, eyePoints):
     #  applying the threshold to the eye . Đọc Document để hiểu rõ https://docs.opencv.org/4.5.1/d7/d4d/tutorial_py_thresholding.html
     # Tham khảo https://docs.opencv.org/4.5.2/d7/dd0/tutorial_js_thresholding.html
     ret, thresholdEye = cv.threshold(cropedEye, 100, 255, cv.THRESH_BINARY)
+
     
     # dividing the eye into Three parts .
     rightPart = thresholdEye[0:height, 0:divPart]
     centerPart = thresholdEye[0:height, divPart:divPart+divPart]
     leftPart = thresholdEye[0:height, divPart+divPart:width]
 
-    print(rightPart, " ", centerPart)
     # counting Black pixel in each part using numpy.
     rightBlackPx = np.sum(rightPart == 0)
     centerBlackPx = np.sum(centerPart == 0)
     leftBlackPx = np.sum(leftPart == 0)
     pos, color = Position([rightBlackPx, centerBlackPx, leftBlackPx])
     # print(pos)
-    return mask, pos, color
+    return mask, thresholdEye, color
 
 
 def Position(ValuesList):

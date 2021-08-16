@@ -79,7 +79,8 @@ while True:
 
         # for p in LeftEyePoint:
         #     cv.circle(image, p, 3, m.MAGENTA, 1)
-        mask, pos, color = m.EyeTracking(frame, grayFrame, RightEyePoint)
+        mask, pos, color= m.EyeTracking(frame, grayFrame, RightEyePoint)
+        
         maskleft, leftPos, leftColor = m.EyeTracking(frame, grayFrame, LeftEyePoint)
 
         # draw background as line where we put text.
@@ -90,13 +91,18 @@ while True:
                 (int(width-60), 90), leftColor[0], 30)
 
         # writing text on above line
-        cv.putText(image, f'{pos}', (35, 95), m.fonts, 0.6, color[1], 2)
-        cv.putText(image, f'{leftPos}', (int(width-140), 95),
-                   m.fonts, 0.6, leftColor[1], 2)
-        cv.putText(image, f'Right Eye', (35, 55), m.fonts, 0.6, color[1], 2)
-        cv.putText(image, f'Left Eye', (int(width-145), 55),
-                   m.fonts, 0.6, leftColor[1], 2)
+        # cv.putText(image, f'{pos}', (35, 95), m.fonts, 0.6, color[1], 2)
+        # cv.putText(image, f'{leftPos}', (int(width-140), 95),
+        #            m.fonts, 0.6, leftColor[1], 2)
+        # cv.putText(image, f'Right Eye', (35, 55), m.fonts, 0.6, color[1], 2)
+        # cv.putText(image, f'Left Eye', (int(width-145), 55),
+        #            m.fonts, 0.6, leftColor[1], 2)
 
+
+        cv.imshow("mask", mask + maskleft)
+        cv.imshow("pos", pos)
+
+        #cv.imshow("color", text)
         # showing the frame on the screen
         cv.imshow('Frame', image)
     else:
