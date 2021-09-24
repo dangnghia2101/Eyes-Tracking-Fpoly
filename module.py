@@ -64,7 +64,7 @@ def faceDetector(image, gray, Draw=True):
     #looping through All the face detected.
     for face in faces:
         # getting coordinates of face.
-        cordFace1 = (face.left(), face.top())
+        cordFace1 = (face.left(), face.top()) 
         cordFace2 = (face.right(), face.bottom())
 
         # draw rectangle if draw is True.
@@ -110,14 +110,14 @@ def blinkDetector(eyePoints):
 # Code xủ lí mắt chính
 def EyeTracking(image, gray, eyePoints):
     # getting dimensions of image
-    dim = gray.shape  # Lấy kích thước màn hình camera 
+    dim = gray.shape  # Lấy kích thước màn hình camera height x width 400 x 300
     # creating mask .
     mask = np.zeros(dim, dtype=np.uint8)  # Tạo mảng 2 chiều có kích thước dim với tất cả giá trị 0
 
     # converting eyePoints into Numpy arrays.
     PollyPoints = np.array(eyePoints, dtype=np.int32)  #Ép sang kiểu array numpy để áp dụng đc fillPoly
     # Filling the Eyes portion with WHITE color.
-    cv.fillPoly(mask, [PollyPoints], 255) # vùng trong khung mắt vẽ màu trắng 255
+    cv.fillPoly(mask, [PollyPoints], 255) # vùng trong khung mắt vẽ màu trắng (255,255,255)
 
     # Writing gray image where color is White  in the mask using Bitwise and operator.
     eyeImage = cv.bitwise_and(gray, gray, mask=mask) #lấy các pixel nơi có mask !=0
@@ -146,7 +146,7 @@ def EyeTracking(image, gray, eyePoints):
     
     # dividing the eye into Three parts .
     rightPart = thresholdEye[0:height, 0:divPart]
-    centerPart = thresholdEye[0:height, divPart:divPart+divPart]
+    centerPart = thresholdEye[0:height, divPart:divPart+divPart] 
     leftPart = thresholdEye[0:height, divPart+divPart:width]
 
     # counting Black pixel in each part using numpy.
@@ -155,7 +155,7 @@ def EyeTracking(image, gray, eyePoints):
     leftBlackPx = np.sum(leftPart == 0)
     pos, color = Position([rightBlackPx, centerBlackPx, leftBlackPx])
     # print(pos)
-    return mask, thresholdEye, color
+    return mask, pos, color
 
 
 def Position(ValuesList):

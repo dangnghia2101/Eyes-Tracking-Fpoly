@@ -53,7 +53,7 @@ while True:
         cv.putText(frame, f'FPS: {round(FPS,1)}',
                    (460, 20), m.fonts, 0.7, m.YELLOW, 2)
         RightEyePoint = PointList[36:42]
-        LeftEyePoint = PointList[42:48]
+        LeftEyePoint = PointList[42:48] 
         leftRatio, topMid, bottomMid = m.blinkDetector(LeftEyePoint)
         rightRatio, rTop, rBottom = m.blinkDetector(RightEyePoint)
         # cv.circle(image, topMid, 2, m.YELLOW, -1)
@@ -91,16 +91,16 @@ while True:
                 (int(width-60), 90), leftColor[0], 30)
 
         # writing text on above line
-        # cv.putText(image, f'{pos}', (35, 95), m.fonts, 0.6, color[1], 2)
-        # cv.putText(image, f'{leftPos}', (int(width-140), 95),
-        #            m.fonts, 0.6, leftColor[1], 2)
-        # cv.putText(image, f'Right Eye', (35, 55), m.fonts, 0.6, color[1], 2)
-        # cv.putText(image, f'Left Eye', (int(width-145), 55),
-        #            m.fonts, 0.6, leftColor[1], 2)
+        cv.putText(image, f'{pos}', (35, 95), m.fonts, 0.6, color[1], 2)
+        cv.putText(image, f'{leftPos}', (int(width-140), 95),
+                   m.fonts, 0.6, leftColor[1], 2)
+        cv.putText(image, f'Right Eye', (35, 55), m.fonts, 0.6, color[1], 2)
+        cv.putText(image, f'Left Eye', (int(width-145), 55),
+                   m.fonts, 0.6, leftColor[1], 2)
 
 
-        cv.imshow("mask", mask + maskleft)
-        cv.imshow("pos", pos)
+        # cv.imshow("mask", mask + maskleft)
+        # cv.imshow("pos", pos)
 
         #cv.imshow("color", text)
         # showing the frame on the screen
